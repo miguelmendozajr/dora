@@ -1,6 +1,6 @@
 import { pool } from "../db.js";
 
-export const seed = async (req, res) => {
+export const seedData = async (req, res) => {
     try {
         await pool.query("INSERT INTO machine VALUES (1, 'Lavadora', 0, 0), (2, 'Secadora', 0, 0)");
     } catch (error) {
