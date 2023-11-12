@@ -9,7 +9,7 @@ router.get("/", async (req, res) => {
     res.json(result[0]);
 });
 
-router.get("/seed", seedData);
+router.post("/seed", seedData);
 router.get("/washroom/:id", getMachine);
 router.patch("/washroom/:id", updateMachine);
 
