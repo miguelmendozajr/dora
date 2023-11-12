@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { getMachine, updateMachine } from "../controllers/index.controller.js";
+import { pool } from "../db.js";
 
 const router = Router();
 
