@@ -9,7 +9,7 @@ router.get("/", async (req, res) => {
     res.json(result[0]);
 });
 
-router.get("/washroom", getMachine);
-router.patch("/washroom", updateMachine);
+router.get("/washroom/:id", getMachine);
+router.patch("/washroom/:id", updateMachine);
 
 export default router;
