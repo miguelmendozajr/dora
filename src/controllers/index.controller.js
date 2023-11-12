@@ -3,6 +3,7 @@ import { pool } from "../db.js";
 export const seedData = async (req, res) => {
     try {
         await pool.query("INSERT INTO machine VALUES (1, 'Lavadora', 0, 0), (2, 'Secadora', 0, 0)");
+        res.json('ok');
     } catch (error) {
         return res.status(500).json({
             message: 'Error'
