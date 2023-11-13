@@ -26,8 +26,9 @@ export const updateMachine = async (req, res) => {
     try {
         const { id } = req.params;
         const { onUse, washing } = req.body;
+        console.log(req);
         console.log(onUse, washing);
-        await pool.query('UPDATE machine SET onUse = ?, washing = ? WHERE id = ?', [onUse, washing, id]);
+        await pool.query('UPDATE machine SET onUse = ?, washing = ? WHERE id = ?', [parseInt(onUse), parseInt(washing), id]);
         res.json({ message: 'Updated' });
     } catch (error) {
         return res.status(500).json({
