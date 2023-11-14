@@ -22,6 +22,42 @@ export const getMachine = async (req, res) => {
     }
 }
 
+export const setWashingTrue = async (req, res) => {
+    try {
+        const { id } = req.params;
+        await pool.query('UPDATE machine SET onUse = 1, washing = 1 WHERE id = ?', [id]);
+        res.json({ message: 'Updated' });
+    } catch (error) {
+        return res.status(500).json({
+            message: 'Error'
+        })
+    };
+}
+
+export const setWashingFalse = async (req, res) => {
+    try {
+        const { id } = req.params;
+        await pool.query('UPDATE machine SET onUse = 1, washing = 0 WHERE id = ?', [id]);
+        res.json({ message: 'Updated' });
+    } catch (error) {
+        return res.status(500).json({
+            message: 'Error'
+        })
+    };
+}
+
+export const setOnUseFalse = async (req, res) => {
+    try {
+        const { id } = req.params;
+        await pool.query('UPDATE machine SET onUse = 0, washing = 0 WHERE id = ?', [id]);
+        res.json({ message: 'Updated' });
+    } catch (error) {
+        return res.status(500).json({
+            message: 'Error'
+        })
+    };
+}
+
 export const updateMachine = async (req, res) => {
     try {
         const { id } = req.params;

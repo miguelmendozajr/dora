@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getMachine, updateMachine, seedData } from "../controllers/index.controller.js";
+import { getMachine, seedData, setWashingTrue, setWashingFalse, setOnUseFalse } from "../controllers/index.controller.js";
 import { pool } from "../db.js";
 
 const router = Router();
@@ -11,6 +11,8 @@ router.get("/", async (req, res) => {
 
 router.post("/seed", seedData);
 router.get("/washroom/:id", getMachine);
-router.patch("/washroom/:id", updateMachine);
+router.post("/washroom/:id", setWashingTrue);
+router.patch("/washroom/:id", setWashingFalse);
+router.put("/washroom/:id", setOnUseFalse);
 
 export default router;
