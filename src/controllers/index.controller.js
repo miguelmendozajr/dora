@@ -37,7 +37,7 @@ export const setWashingTrue = async (req, res) => {
 export const setWashingFalse = async (req, res) => {
     try {
         const { id } = req.params;
-        await pool.query('UPDATE machine SET onUse = 1, washing = 0 WHERE id = ?', [id]);
+        await pool.query('UPDATE machine SET washing = 0 WHERE id = ?', [id]);
         res.json({ message: 'Updated' });
     } catch (error) {
         return res.status(500).json({
