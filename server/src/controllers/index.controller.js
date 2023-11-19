@@ -30,9 +30,11 @@ export const updateMachine = async (req, res) => {
         const updateFields = {};
         if (onUse !== undefined) {
             updateFields.onUse = parseInt(onUse);
+            // 
         }
         if (washing !== undefined) {
             updateFields.washing = parseInt(washing);
+            // 
         }
         if (cycle !== undefined) {
             await pool.query('UPDATE machine SET cycle = ? WHERE id = ?', [cycle, id]);
