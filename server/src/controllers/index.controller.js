@@ -91,6 +91,8 @@ export const updateMachine = async (req, res) => {
             await pool.query('UPDATE machine SET cycle = ? WHERE id = ?', [cycle, id]);
         }
 
+        console.log(updateFields);
+
         if (Object.keys(updateFields).length > 0) {
             await pool.query('UPDATE machine SET ? WHERE id = ?', [updateFields, id]);
         }
