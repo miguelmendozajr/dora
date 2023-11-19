@@ -58,13 +58,13 @@ export const setOnUseFalse = async (req, res) => {
     };
 }
 
+/*
+
 export const updateMachine = async (req, res) => {
     try {
         const { id } = req.params;
-        const { onUse, washing } = req.body;
-        console.log(req);
-        console.log(onUse, washing);
-        await pool.query('UPDATE machine SET onUse = ?, washing = ? WHERE id = ?', [parseInt(onUse), parseInt(washing), id]);
+        const { cycle } = req.query;
+        await pool.query('UPDATE machine SET cycle = ? WHERE id = ?', [cycle, id]);
         res.json({ message: 'Updated' });
     } catch (error) {
         return res.status(500).json({
@@ -72,3 +72,33 @@ export const updateMachine = async (req, res) => {
         })
     };
 }
+
+*/
+
+export const updateMachine = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { onUse, washing, cycle } = req.query;
+
+        const updateFields = {};
+        if (onUse !== undefined) {
+            updateFields.onUse = parseInt(onUse);
+        }
+        if (washing !== undefined) {
+            updateFields.washing = parseInt(washing);
+        }
+        if (cycle !== undefined) {
+            await pool.query('UPDATE machine SET cycle = ? WHERE id = ?', [cycle, id]);
+        }
+
+        if (Object.keys(updateFields).length > 0) {
+            await pool.query('UPDATE machine SET ? WHERE id = ?', [updateFields, id]);
+        }
+
+        res.json({ message: 'Updated' });
+    } catch (error) {
+        return res.status(500).json({
+            message: 'Error'
+        });
+    }
+};
