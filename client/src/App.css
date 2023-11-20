@@ -1,21 +1,16 @@
-.App.container {
+.container {
   display: flex;
   justify-content: center;
-  align-items: flex-start; /* Adjust alignment to flex-start */
-  height: 100vh;
-  margin-top: -20px;
+  align-items: center;
+  min-height: 100vh;
+
 }
 
 
 .machine-name {
   text-align: center;
-  margin-top: 50px;
 }
 
 .user-list {
   text-align: center;
-  margin-top: 20px; /* Adjust top margin for spacing */
-  display: flex;
-  flex-direction: column; /* Users flow downwards */
-  align-items: center; /* Center items horizontally */
 }
