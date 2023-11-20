@@ -146,7 +146,11 @@ export const updateMachine = async (req, res) => {
             } else if (updateFields.washing == 1) {
                 if (cycle == "Washing"){
                     const [row] = await pool.query('SELECT id FROM cycle WHERE machine_id = ? AND status = ? AND createdAt BETWEEN ? AND ? ORDER BY createdAt ASC LIMIT 1', [id, 'Not started', `${formattedYesterday} 00:00:00`, `${formattedToday} 23:59:59`]);
-                    await pool.query('UPDATE cycle SET status = ?, startedAt = CURRENT_TIMESTAMP WHERE id = ?', ['Washing', row[0].id]);
+                    if (row.length > 1){
+                        await pool.query('UPDATE cycle SET status = ?, startedAt = CURRENT_TIMESTAMP WHERE id = ?', ['Washing', row[0].id]);
+                    } else {
+                        await pool.query("INSERT INTO cycle (machine_id, status, startedAt, createdAt, user_phone) VALUES (?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL)", [id, 'Washing']);
+                    }
                 } 
             }
 
