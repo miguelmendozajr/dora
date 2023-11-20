@@ -6,6 +6,15 @@
 
 }
 
+.machine-image {
+  max-width: 100%;
+}
+
+@media (max-width: 767px) {
+  .machine-image {
+    max-width: 60% !important;
+  }
+}
 
 .machine-name {
   text-align: center;
