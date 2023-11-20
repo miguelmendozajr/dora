@@ -14,7 +14,7 @@ function App() {
   const [elapsedTime, setElapsedTime] = useState(0); // State for elapsed time
 
   const handleAddUser = () => {
-    const newUser = { id: users.length + 1, name: 'Miguel' }; // Creating a new user object
+    const newUser = { id: users.length + 1, name: 'Miguel Mendoza' }; // Creating a new user object
     setUsers([...users, newUser]); // Adding the new user to the list
   };
   const handleDeleteUser = (id) => {
@@ -60,15 +60,16 @@ function App() {
                 {users.map((user) => (
                   <li
                     key={user.id}
-                    className="list-group-item d-flex justify-content-between align-items-center"
+                    className={`list-group-item d-flex justify-content-${user.name === 'Miguel Mendoza' ? 'between' : 'center'} align-items-center`}
                   >
-                    {user.name}
-                    <button
-                      className="btn btn-danger"
-                      onClick={() => handleDeleteUser(user.id)}
-                    >
-                      Delete
-                    </button>
+                    <span className={`fw-bold ${user.name !== 'Miguel' && 'text-center w-100'}`}>
+                      {user.name}
+                    </span>
+                    {user.name === 'Miguel Mendoza' && (
+                      <button className="btn btn-sm pl-5 btn-danger" onClick={() => handleDeleteUser(user.id)}>
+                        Cancel
+                      </button>
+                    )}
                   </li>
                 ))}
               </ul>
