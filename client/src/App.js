@@ -50,7 +50,7 @@ function App() {
               {`${formatTimeUnit(hours)}:${formatTimeUnit(minutes)}:${formatTimeUnit(seconds)} | Washing...`}
             </div>
             <div className='mt-1'>
-              <button className="btn btn-outline-danger">I am using the machine</button>
+              <button className="btn btn-outline-danger">I am using it</button>
             </div>
           </div>
           {users.length > 0 && (
