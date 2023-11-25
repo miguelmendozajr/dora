@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getWaitList, seedData, updateMachine, dropTables, createTables, createCycle } from "../controllers/index.controller.js";
+import { seedData, updateMachine, dropTables, createTables, createCycle, getMachine } from "../controllers/index.controller.js";
 import { pool } from "../db.js";
 
 const router = Router();
@@ -14,6 +14,6 @@ router.post("/drop", dropTables);
 router.post("/create", createTables);
 router.put("/washroom/machine/:id", updateMachine);
 router.post("/washroom/machine/:id/cycle", createCycle);
-router.get("/washroom/machine/:id/waitlist", getWaitList);
+router.get("/washroom/machine/:id", getMachine);
 
 export default router;
