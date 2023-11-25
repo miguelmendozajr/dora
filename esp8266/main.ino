@@ -18,30 +18,46 @@ const char* ssid = "INFINITUM54AC";
 const char* password = "fHHqUGWR4z";
 
 String previousCycle = "";
+int onUse = 0;
 
 void handleCycle(String url) {
   digitalWrite(LED_RED_PIN, HIGH);
+  onUse = 1;
   digitalWrite(LED_GREEN_PIN, LOW);
 
+  String newUrl = url;
   int squezzing = digitalRead(LDR_PIN_2);
   int rinsing = digitalRead(LDR_PIN_3);
   int washing = digitalRead(LDR_PIN_4);
 
-  String newUrl = url;
-  if (washing == 0 && previousCycle != "Washing" ){
+  if (washing == 0 ){
+    if (previousCycle == "Washing"){
+      return;
+    }
+
     Serial.println("Washing");
     newUrl += "&cycle=Washing";
     previousCycle = "Washing";
-  } else if (rinsing == 0 && previousCycle != "Rinsing"){
+  } else if (rinsing == 0){
+    if (previousCycle == "Rinsing"){
+      return;
+    }
+    if (washing == 0){
+      return;
+    }
     Serial.println("Rinsing");
     newUrl += "&cycle=Rinsing";
     previousCycle = "Rinsing";
-  } else if (squezzing == 0 && previousCycle != "Squeezing"){
+  } else if (squezzing == 0){
+    if (previousCycle == "Squeezing"){
+      return;
+    }
+    if (washing == 0 || rinsing == 0){
+      return;
+    }
     Serial.println("Squeezing");
     newUrl += "&cycle=Squeezing";
     previousCycle = "Squeezing";
-  } else {
-    return;
   }
 
   WiFiClientSecure client;
@@ -51,6 +67,8 @@ void handleCycle(String url) {
     Serial.println("connection failed");
     return;
   }
+
+  Serial.println("Updating........");
   client.println("PUT " + newUrl + " HTTP/1.1");
   client.println("Host: dora-production.up.railway.app");
   client.println("Content-Type: application/x-www-form-urlencoded");
@@ -80,12 +98,16 @@ int previousState = -1;
 
 void handleTap(String url) {
   digitalWrite(LED_GREEN_PIN, HIGH);
+  if (onUse == 0){
+    return;
+  }
   String newUrl = url;
   long distance = sonar.ping_cm();
   Serial.println(distance <= 10 ? "Washing machine tap opened" : "Washing machine tap closed");
 
   if (distance < 10){
     digitalWrite(LED_RED_PIN, LOW);
+    onUse = 0;
     newUrl += "&onUse=0";
 
     if (previousState == 0){
@@ -98,7 +120,6 @@ void handleTap(String url) {
       return;
     }
     previousState = 1;
-
   }
 
   WiFiClientSecure client;
@@ -109,6 +130,7 @@ void handleTap(String url) {
     return;
   }
 
+  Serial.println("Updating........");
   client.println("PUT " + String(newUrl) + " HTTP/1.1");
   client.println("Host: dora-production.up.railway.app");
   client.println("Content-Type: application/x-www-form-urlencoded");
@@ -135,10 +157,26 @@ void handleTap(String url) {
 }
 
 void handleRoot() {
-  int turnedOff = digitalRead(LDR_PIN_1);
+
+  int turnedOff = 0;
+  for (int i = 0; i < 10; i++){
+    int squezzing = digitalRead(LDR_PIN_2);
+    if (squezzing){
+      turnedOff = 1;
+      break;
+    }
+    delay(250);
+  }
+
+  String extra = "";
+  int warning = digitalRead(LDR_PIN_1);
+  if(warning == 0){
+    extra += "&warning=1";
+  };
+
   Serial.println(turnedOff == 1 ? "Washing machine led turned OFF" : "Washing machine led turned ON");
   if (turnedOff == 0 ){
-    handleCycle("https://dora-production.up.railway.app/washroom/machine/1?washing=1&onUse=1");
+    handleCycle("https://dora-production.up.railway.app/washroom/machine/1?washing=1&onUse=1" + extra);
   } else {
     handleTap("https://dora-production.up.railway.app/washroom/machine/1?washing=0");
     
@@ -168,6 +206,6 @@ void setup() {
 
 void loop() {
   handleRoot();
-  delay(1000);
+  delay(3000);
   Serial.println("--------------------------------");
 }
