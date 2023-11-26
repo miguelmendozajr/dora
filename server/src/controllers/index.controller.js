@@ -102,7 +102,7 @@ export const createCycle = async (req, res) => {
 }
 
 export const cancelCycle = async (req, res) => {
-    const { id } = req.params;
+    const { id } = req.query;
     try {
         await pool.query("UPDATE cycle SET status = ? WHERE id = ?", ['Canceled', id]);
         res.json({ message: 'Cycle successfully canceled' });

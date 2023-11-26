@@ -15,7 +15,7 @@ router.post("/create", createTables);
 router.post("/user", saveUser);
 router.put("/washroom/machine/:id", updateMachine);
 router.post("/washroom/machine/:id/cycle", createCycle);
-router.delete("/washroom/cycle/:id", cancelCycle);
+router.post("/washroom/cycle", cancelCycle);
 router.get("/washroom/machine/:id", getMachine);
 
 export default router;
