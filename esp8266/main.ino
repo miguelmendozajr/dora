@@ -15,7 +15,7 @@ NewPing sonar(TRIG_PIN, ECHO_PIN);
 long distance;
 
 const char* ssid = "INFINITUM54AC";
-const char* password = "fHHqUGWR4z";
+const char* password = "password";
 
 String previousCycle = "";
 int onUse = 0;
@@ -168,17 +168,17 @@ void handleRoot() {
     delay(250);
   }
 
-  String extra = "";
+  String extra = "&warning=0";
   int warning = digitalRead(LDR_PIN_1);
   if(warning == 0){
     extra += "&warning=1";
-  };
+  }
 
   Serial.println(turnedOff == 1 ? "Washing machine led turned OFF" : "Washing machine led turned ON");
   if (turnedOff == 0 ){
     handleCycle("https://dora-production.up.railway.app/washroom/machine/1?washing=1&onUse=1" + extra);
   } else {
-    handleTap("https://dora-production.up.railway.app/washroom/machine/1?washing=0");
+    handleTap("https://dora-production.up.railway.app/washroom/machine/1?washing=0" + extra);
     
   };
 }
