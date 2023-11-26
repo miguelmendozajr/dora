@@ -68,8 +68,6 @@ export const seedData = async (req, res) => {
     try {
         await pool.query("INSERT INTO machine (name) VALUES ('Lavadora')");
         await pool.query("INSERT INTO user (phone, name) VALUES ('+5218713337250', 'Miguel Mendoza')");
-        // await pool.query("INSERT INTO cycle (machine_id, status) VALUES (1, 'Not started')");
-
         res.json({ message: 'Database seeded' });
     } catch (error) {
         return res.status(500).json({
@@ -77,6 +75,30 @@ export const seedData = async (req, res) => {
         })
     }
 };
+
+export const saveUser = async (req, res) => {
+    try{
+        const { name, phone } = req.body;
+        await pool.query("INSERT INTO user (phone, name) VALUES (?, ?)", [phone, name]);
+        res.json({ message: 'User successfully created' });
+    } catch (error){
+        return res.status(500).json({
+            error
+        })
+    }
+}
+
+export const createCycle = async (req, res) => {
+    const { id, phone } = req.body;
+    try {
+        await pool.query("INSERT INTO cycle (machine_id, status, user_phone) VALUES (?, 'Not started', ?)", [id, phone]);
+        res.json({ message: 'Cycle successfully created' });
+    } catch (error) {
+        return res.status(500).json({
+            error
+        })
+    }
+}
 
 export const getMachine = async (req, res) => {
     try {
@@ -102,22 +124,6 @@ export const getMachine = async (req, res) => {
     }
 }
 
-// testing
-
-export const createCycle = async (req, res) => {
-    const { id } = req.params;
-    const { phone } = req.query;
-    
-    try {
-        await pool.query("INSERT INTO cycle (machine_id, status, user_phone) VALUES (?, 'Not started', ?)", [parseInt(id), `+${phone}`]);
-        res.json({ message: 'Cycle created' });
-    } catch (error) {
-        return res.status(500).json({
-            error
-        })
-    }
-}
-
 export const updateMachine = async (req, res) => {
     try {
         const { id } = req.params;
@@ -132,17 +138,14 @@ export const updateMachine = async (req, res) => {
 
         if (cycle !== undefined && cycle !== "Washing") {
             await pool.query('UPDATE cycle INNER JOIN machine ON machine.cycle_id = cycle.id SET status = ? WHERE machine.id = ?', [cycle, id]);
-            //await pool.query('UPDATE cycle SET status = ? WHERE machine_id = ? AND status NOT IN (?, ?, ?) AND (createdAt BETWEEN ? AND ?)', [cycle, id, 'Finished', 'Not started', 'Deleted', `${formattedYesterday} 00:00:00`, `${formattedToday} 23:59:59`]);
         }
 
         if (warning !== undefined) {
             await pool.query('UPDATE cycle INNER JOIN machine ON machine.cycle_id = cycle.id SET warning = 1 WHERE machine.id = ?', [id]);
-            //await pool.query('UPDATE cycle SET status = ? WHERE machine_id = ? AND status NOT IN (?, ?, ?) AND (createdAt BETWEEN ? AND ?)', [cycle, id, 'Finished', 'Not started', 'Deleted', `${formattedYesterday} 00:00:00`, `${formattedToday} 23:59:59`]);
         }
 
         if (washing !== undefined) {
             updateFields.washing = parseInt(washing);
-            // if washing = 0 notify user 
             if (updateFields.washing == 0 && onUse == undefined){
                 
                 const [rows] = await pool.query('SELECT * FROM cycle INNER JOIN machine ON machine.cycle_id = cycle.id')
@@ -156,9 +159,7 @@ export const updateMachine = async (req, res) => {
                     .then(message => console.log(message.sid));
                 }
                 await pool.query('UPDATE cycle INNER JOIN machine ON machine.cycle_id = cycle.id SET status = ? WHERE machine.id = ?', ['Finished', id]);
-                
-                //await pool.query('UPDATE cycle SET status = ? WHERE machine_id = ? AND status NOT IN (?, ?, ?) AND (createdAt BETWEEN ? AND ?)', ['Finished', id, 'Finished', 'Not started', 'Deleted', `${formattedYesterday} 00:00:00`, `${formattedToday} 23:59:59`]);
-       
+                       
             } else if (updateFields.washing == 1) {
                 
                 if (cycle == "Washing"){
@@ -201,13 +202,6 @@ export const updateMachine = async (req, res) => {
             }
 
         }
-
-        /*
-        if (Object.keys(updateFields).length > 0) {
-            await pool.query('UPDATE machine SET ? WHERE id = ?', [updateFields, id]);
-        }
-        */
-
         res.json({ message: 'Updated' });
     } catch (error) {
         return res.status(500).json({
