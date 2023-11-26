@@ -67,7 +67,6 @@ export const createTables = async (req, res) => {
 export const seedData = async (req, res) => {
     try {
         await pool.query("INSERT INTO machine (name) VALUES ('Lavadora')");
-        await pool.query("INSERT INTO user (phone, name) VALUES ('+5218713337250', 'Miguel Mendoza')");
         res.json({ message: 'Database seeded' });
     } catch (error) {
         return res.status(500).json({
