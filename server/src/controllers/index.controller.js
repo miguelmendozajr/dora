@@ -104,9 +104,8 @@ export const createCycle = async (req, res) => {
 export const updateCycle = async (req, res) => {
     const { id } = req.params
     const { phone } = req.query;
-    await pool.query('UPDATE cycle INNER JOIN machine ON machine.cycle_id = cycle.id SET user_phone = ? WHERE machine.id = ?', [`+${phone}`, id]);
     try {
-        await pool.query("UPDATE cycle SET phone WHERE id = ?", ['Canceled', id]);
+        await pool.query('UPDATE cycle INNER JOIN machine ON machine.cycle_id = cycle.id SET user_phone = ? WHERE machine.id = ?', [`+${phone}`, id]);
         res.json({ message: 'Cycle successfully canceled' });
     } catch (error) {
         return res.status(500).json({
