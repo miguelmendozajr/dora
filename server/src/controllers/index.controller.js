@@ -77,8 +77,8 @@ export const seedData = async (req, res) => {
 
 export const saveUser = async (req, res) => {
     try{
-        const { name, phone } = req.body;
-        await pool.query("INSERT INTO user (phone, name) VALUES (?, ?)", [phone, name]);
+        const { name, phone } = req.query;
+        await pool.query("INSERT INTO user (phone, name) VALUES (?, ?)", [`+${phone}`, name]);
         res.json({ message: 'User successfully created' });
     } catch (error){
         return res.status(500).json({
@@ -89,9 +89,9 @@ export const saveUser = async (req, res) => {
 
 export const createCycle = async (req, res) => {
     const { id } = req.params;
-    const { phone } = req.body;
+    const { phone } = req.query;
     try {
-        await pool.query("INSERT INTO cycle (machine_id, status, user_phone) VALUES (?, 'Not started', ?)", [id, phone]);
+        await pool.query("INSERT INTO cycle (machine_id, status, user_phone) VALUES (?, 'Not started', ?)", [id, `+${phone}`]);
         res.json({ message: 'Cycle successfully created' });
     } catch (error) {
         return res.status(500).json({
