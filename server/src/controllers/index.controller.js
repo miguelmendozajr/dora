@@ -89,7 +89,8 @@ export const saveUser = async (req, res) => {
 }
 
 export const createCycle = async (req, res) => {
-    const { id, phone } = req.body;
+    const { id } = req.params;
+    const { phone } = req.body;
     try {
         await pool.query("INSERT INTO cycle (machine_id, status, user_phone) VALUES (?, 'Not started', ?)", [id, phone]);
         res.json({ message: 'Cycle successfully created' });
