@@ -78,6 +78,12 @@ export const seedData = async (req, res) => {
 export const saveUser = async (req, res) => {
     try{
         const { name, phone } = req.query;
+        const [rows] = await pool.query("SELECT * FROM user WHERE phone = ?", [`+${phone}`])
+        if (rows.length > 0){
+            return res.status(200).json({
+                message: 'User was already created'
+            })
+        }
         await pool.query("INSERT INTO user (phone, name) VALUES (?, ?)", [`+${phone}`, name]);
         res.json({ message: 'User successfully created' });
     } catch (error){
