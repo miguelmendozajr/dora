@@ -190,7 +190,7 @@ export const updateMachine = async (req, res) => {
                     })
                     .then(message => console.log(message.sid));
                 }
-                await pool.query('UPDATE cycle INNER JOIN machine ON machine.cycle_id = cycle.id SET status = ? WHERE machine.id = ?', ['Finished', id]);
+                await pool.query('UPDATE cycle INNER JOIN machine ON machine.cycle_id = cycle.id SET status = ?, warning = 0 WHERE machine.id = ?', ['Finished', id]);
                        
             } else if (updateFields.washing == 1) {
                 
