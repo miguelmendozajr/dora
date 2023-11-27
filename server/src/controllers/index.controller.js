@@ -181,6 +181,8 @@ export const updateMachine = async (req, res) => {
             if (updateFields.washing == 0 && onUse == undefined){
                 
                 const [rows] = await pool.query('SELECT * FROM cycle INNER JOIN machine ON machine.cycle_id = cycle.id')
+                await pool.query('UPDATE cycle INNER JOIN machine ON machine.cycle_id = cycle.id SET status = ?, warning = 0 WHERE machine.id = ?', ['Finished', id]);
+
                 if (rows[0].user_phone){
                     client.messages
                     .create({
@@ -190,7 +192,6 @@ export const updateMachine = async (req, res) => {
                     })
                     .then(message => console.log(message.sid));
                 }
-                await pool.query('UPDATE cycle INNER JOIN machine ON machine.cycle_id = cycle.id SET status = ?, warning = 0 WHERE machine.id = ?', ['Finished', id]);
                        
             } else if (updateFields.washing == 1) {
                 
@@ -220,7 +221,8 @@ export const updateMachine = async (req, res) => {
             
             if (updateFields.onUse == 0){            
                 const [rows] = await pool.query("SELECT * FROM cycle WHERE machine_id = ? AND status = ? AND (createdAt BETWEEN ? AND ?) ORDER BY createdAt ASC LIMIT 1", [id, 'Not started', `${formattedYesterday} 00:00:00`, `${formattedToday} 23:59:59`]);
-                console.log(rows[0].user_phone);
+                await pool.query('UPDATE machine SET cycle_id = NULL WHERE id = ?', [id]);
+
                 if (rows[0].user_phone){
                     client.messages
                     .create({
@@ -230,7 +232,6 @@ export const updateMachine = async (req, res) => {
                     })
                     .then(message => console.log(message.sid));
                 };
-                await pool.query('UPDATE machine SET cycle_id = NULL WHERE id = ?', [id]);
             }
 
         }
