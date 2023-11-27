@@ -236,6 +236,7 @@ export const updateMachine = async (req, res) => {
         }
         res.json({ message: 'Updated' });
     } catch (error) {
+        console.log(error);
         return res.status(500).json({
             error
         });
