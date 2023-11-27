@@ -13,7 +13,7 @@ router.post("/seed", seedData);
 router.post("/drop", dropTables);
 router.post("/create", createTables);
 router.post("/user", saveUser);
-router.put("/washroom/machine/:id", updateMachine);
+router.post("/washroom/machine/:id", updateMachine);
 router.post("/washroom/machine/:id/cycle", createCycle);
 router.post("/washroom/machine/:id/cycle/update", updateCycle);
 router.post("/washroom/cycle", cancelCycle);
